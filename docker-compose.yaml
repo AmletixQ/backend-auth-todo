@@ -1,10 +1,14 @@
 version: "3"
 services:
   postgres:
+    container_name: application
     image: postgres
     ports:
-      - "5432:5432"
+      - "${POSTGRES_PORT}:${POSTGRES_PORT}"
     restart: always
+    env_file:
+      - .local.env
     environment:
-      - POSTGRES_USER=defaultcomputeruser
-      - POSTGRES_PASSWORD=supersecretdatabasepassword
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_DB=${POSTGRES_NAME}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
