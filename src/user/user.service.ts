@@ -68,6 +68,12 @@ export class UserService {
     return user;
   }
 
+  async findByID(id: number) {
+    return await this.userRepository.findOneBy({
+      id,
+    });
+  }
+
   private generate(user: UserEntity): string {
     return sign(
       {
