@@ -7,6 +7,8 @@ import { sign } from "jsonwebtoken";
 
 import * as dotenv from "dotenv";
 import { UserResponseInterface } from "./types/userResponse.interface";
+import { compare } from "bcrypt";
+import { LoginUserDto } from "./dto/login-user.dto";
 dotenv.config();
 
 @Injectable()
@@ -39,6 +41,31 @@ export class UserService {
     Object.assign(user, createUserDto);
 
     return await this.userRepository.save(user);
+  }
+
+  async signup(loginUserDto: LoginUserDto): Promise<UserEntity> {
+    const user = await this.userRepository.findOne({
+      where: { email: loginUserDto.email },
+      select: ["id", "email", "username", "password"],
+    });
+
+    if (!user) {
+      throw new HttpException(
+        "Credentials are not valid",
+        HttpStatus.UNPROCESSABLE_ENTITY,
+      );
+    }
+
+    const passwordMatch = await compare(loginUserDto.password, user.password);
+
+    if (!passwordMatch) {
+      throw new HttpException(
+        "Credentials are not valid",
+        HttpStatus.UNPROCESSABLE_ENTITY,
+      );
+    }
+
+    return user;
   }
 
   private generate(user: UserEntity): string {
