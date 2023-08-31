@@ -7,7 +7,7 @@ services:
       - "${POSTGRES_PORT}:${POSTGRES_PORT}"
     restart: always
     env_file:
-      - .local.env
+      - .env
     environment:
       - POSTGRES_USER=${POSTGRES_USER}
       - POSTGRES_DB=${POSTGRES_NAME}
