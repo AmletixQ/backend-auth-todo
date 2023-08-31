@@ -9,6 +9,7 @@ import * as dotenv from "dotenv";
 import { UserResponseInterface } from "./types/userResponse.interface";
 import { compare } from "bcrypt";
 import { LoginUserDto } from "./dto/login-user.dto";
+
 dotenv.config();
 
 @Injectable()
@@ -68,10 +69,12 @@ export class UserService {
     return user;
   }
 
-  async findByID(id: number) {
-    return await this.userRepository.findOneBy({
-      id,
+  async findByID(id: number): Promise<UserEntity> {
+    const user = this.userRepository.findOne({
+      where: { id },
     });
+
+    return user;
   }
 
   private generate(user: UserEntity): string {
@@ -82,6 +85,9 @@ export class UserService {
         email: user.email,
       },
       process.env.JWT_SECRET_KEY,
+      {
+        expiresIn: "30d",
+      },
     );
   }
 
