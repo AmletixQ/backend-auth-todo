@@ -1,5 +1,5 @@
 import { hash } from "bcrypt";
-import { TodoEntity } from "src/todo/todo.entity";
+import { TodoEntity } from "../todo/todo.entity";
 import {
   BeforeInsert,
   Column,

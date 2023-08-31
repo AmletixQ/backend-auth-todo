@@ -1,4 +1,4 @@
-import { UserEntity } from "src/user/user.entity";
+import { UserEntity } from "../user/user.entity";
 import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
 
 @Entity({ name: "todos" })
@@ -9,7 +9,7 @@ export class TodoEntity {
   @Column()
   title: string;
 
-  @Column()
+  @Column({ default: false })
   completed: boolean;
 
   @ManyToOne(() => UserEntity, (user) => user.todos, { eager: true })
