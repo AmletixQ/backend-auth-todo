@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  Delete,
   Get,
   Param,
   Post,
@@ -39,6 +40,12 @@ export class TodoController {
     @Body("todo") updateTodoDto: UpdateTodoDto,
   ) {
     return await this.todoService.update(currentUserID, updateTodoDto, todoID);
+  }
+
+  @Delete(":id")
+  @UseGuards(AuthGuard)
+  async delete(@User("id") currentUserID: number, @Param("id") todoID: number) {
+    return await this.todoService.delete(currentUserID, todoID);
   }
 
   @Get()

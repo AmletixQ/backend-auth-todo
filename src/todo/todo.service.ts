@@ -52,4 +52,20 @@ export class TodoService {
     Object.assign(todo, updateTodoDto);
     return await this.todoRepository.save(todo);
   }
+
+  async delete(currentUserID: number, todoID: number) {
+    const todo = await this.todoRepository.findOne({
+      where: { id: todoID },
+    });
+
+    if (!todo) {
+      throw new HttpException("Article does not exists", HttpStatus.NOT_FOUND);
+    }
+
+    if (todo.author.id !== currentUserID) {
+      throw new HttpException("You are not an author", HttpStatus.FORBIDDEN);
+    }
+
+    return await this.todoRepository.remove(todo);
+  }
 }
