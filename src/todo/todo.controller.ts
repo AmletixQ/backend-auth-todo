@@ -2,7 +2,9 @@ import {
   Body,
   Controller,
   Get,
+  Param,
   Post,
+  Put,
   UseGuards,
   UsePipes,
   ValidationPipe,
@@ -12,6 +14,7 @@ import { AuthGuard } from "src/user/guard/auth.guard";
 import { User } from "src/user/decorators/user.decorator";
 import { CreateTodoDto } from "./dto/create-todo.dto";
 import { UserEntity } from "src/user/user.entity";
+import { UpdateTodoDto } from "./dto/updata-todo.dto";
 
 @Controller("todos")
 export class TodoController {
@@ -25,6 +28,17 @@ export class TodoController {
     @Body("todo") createTodoDto: CreateTodoDto,
   ) {
     return await this.todoService.create(currentUser, createTodoDto);
+  }
+
+  @Put(":id")
+  @UseGuards(AuthGuard)
+  @UsePipes(new ValidationPipe())
+  async update(
+    @User("id") currentUserID: number,
+    @Param("id") todoID: number,
+    @Body("todo") updateTodoDto: UpdateTodoDto,
+  ) {
+    return await this.todoService.update(currentUserID, updateTodoDto, todoID);
   }
 
   @Get()
