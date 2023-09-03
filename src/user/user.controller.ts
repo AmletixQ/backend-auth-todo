@@ -19,9 +19,14 @@ export class UserController {
   @UsePipes(new ValidationPipe())
   async signin(
     @Body("user") createUserDTO: CreateUserDto,
+    @Cookie() cookies: TCookies,
   ): Promise<UserResponseInterface> {
     const user = await this.userService.signin(createUserDTO);
-    return this.userService.buildUserResponse(user);
+    const buildUser = this.userService.buildUserResponse(user);
+    cookies.set("auth-token", buildUser.user.token, {
+      httpOnly: true,
+    });
+    return buildUser;
   }
 
   @Post("login")
