@@ -19,7 +19,7 @@ export class UserService {
     private readonly userRepository: Repository<UserEntity>,
   ) {}
 
-  async signin(createUserDto: CreateUserDto) {
+  async signup(createUserDto: CreateUserDto) {
     const userByEmail = await this.userRepository.findOne({
       where: {
         email: createUserDto.email,
@@ -44,7 +44,7 @@ export class UserService {
     return await this.userRepository.save(user);
   }
 
-  async signup(loginUserDto: LoginUserDto): Promise<UserEntity> {
+  async signin(loginUserDto: LoginUserDto): Promise<UserEntity> {
     const user = await this.userRepository.findOne({
       where: { email: loginUserDto.email },
       select: ["id", "email", "username", "password"],

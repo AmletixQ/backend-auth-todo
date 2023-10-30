@@ -17,22 +17,33 @@ export class UserController {
 
   @Post()
   @UsePipes(new ValidationPipe())
-  async signin(
+  async signup(
     @Body("user") createUserDTO: CreateUserDto,
+    @Cookie() cookies: TCookies,
   ): Promise<UserResponseInterface> {
-    const user = await this.userService.signin(createUserDTO);
-    return this.userService.buildUserResponse(user);
+    const user = await this.userService.signup(createUserDTO);
+    const buildUser = this.userService.buildUserResponse(user);
+
+    cookies.set("auth-token", buildUser.user.token, {
+      httpOnly: true,
+    });
+
+    delete buildUser.user.token;
+    return buildUser;
   }
 
   @Post("login")
   @UsePipes(new ValidationPipe())
-  async signup(
+  async signin(
     @Body("user") loginUserDto: LoginUserDto,
     @Cookie() cookies: TCookies,
   ): Promise<UserResponseInterface> {
-    const user = await this.userService.signup(loginUserDto);
+    const user = await this.userService.signin(loginUserDto);
     const buildUser = this.userService.buildUserResponse(user);
+
     cookies.set("auth-token", buildUser.user.token, { httpOnly: true });
+
+    delete buildUser.user.token;
     return buildUser;
   }
 
