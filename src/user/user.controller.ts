@@ -23,9 +23,12 @@ export class UserController {
   ): Promise<UserResponseInterface> {
     const user = await this.userService.signup(createUserDTO);
     const buildUser = this.userService.buildUserResponse(user);
+
     cookies.set("auth-token", buildUser.user.token, {
       httpOnly: true,
     });
+
+    delete buildUser.user.token;
     return buildUser;
   }
 
@@ -37,7 +40,10 @@ export class UserController {
   ): Promise<UserResponseInterface> {
     const user = await this.userService.signin(loginUserDto);
     const buildUser = this.userService.buildUserResponse(user);
+
     cookies.set("auth-token", buildUser.user.token, { httpOnly: true });
+
+    delete buildUser.user.token;
     return buildUser;
   }
 
