@@ -1,7 +1,9 @@
 import {
   Body,
   Controller,
+  Get,
   Post,
+  UseGuards,
   UsePipes,
   ValidationPipe,
 } from "@nestjs/common";
@@ -10,6 +12,8 @@ import { CreateUserDto } from "./dto/create-user.dto";
 import { UserResponseInterface } from "./types/userResponse.interface";
 import { LoginUserDto } from "./dto/login-user.dto";
 import { Cookie, TCookies } from "./decorators/cookie.decorator";
+import { AuthGuard } from "./guard/auth.guard";
+import { User } from "./decorators/user.decorator";
 
 @Controller("users")
 export class UserController {
@@ -45,6 +49,13 @@ export class UserController {
 
     delete buildUser.user.token;
     return buildUser;
+  }
+
+  @Get("profile")
+  @UseGuards(AuthGuard)
+  async getProfile(@User() user) {
+    delete user.password;
+    return user;
   }
 
   @Post("logout")

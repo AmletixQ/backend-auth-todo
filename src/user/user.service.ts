@@ -3,7 +3,7 @@ import { CreateUserDto } from "./dto/create-user.dto";
 import { UserEntity } from "./user.entity";
 import { HttpException, HttpStatus, Injectable } from "@nestjs/common";
 import { Repository } from "typeorm";
-import { sign } from "jsonwebtoken";
+import { JwtPayload, sign, verify } from "jsonwebtoken";
 
 import * as dotenv from "dotenv";
 import { UserResponseInterface } from "./types/userResponse.interface";
